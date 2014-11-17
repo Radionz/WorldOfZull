@@ -24,8 +24,7 @@ import zuul.rooms.Room;
 
 public class Game {
 	
-	
-	private String deuxiemeAttribut;
+	private String test;
     private Parser parser;
     private Room currentRoom;
 
