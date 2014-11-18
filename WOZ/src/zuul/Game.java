@@ -1,5 +1,7 @@
 package zuul;
 
+import zuul.entities.Item;
+import zuul.entities.Player;
 import zuul.io.Command;
 import zuul.io.CommandWord;
 import zuul.io.Parser;
@@ -24,8 +26,7 @@ import zuul.rooms.Room;
 
 public class Game {
 	
-	
-	private String deuxiemeAttribut;
+	private Player player;
     private Parser parser;
     private Room currentRoom;
 
@@ -54,6 +55,7 @@ public class Game {
         outside.setExit("east", theater);
         outside.setExit("south", lab);
         outside.setExit("west", pub);
+        outside.addItem(new Item("Chocolate bar"));
 
         theater.setExit("west", outside);
 
@@ -71,6 +73,10 @@ public class Game {
      * Main play routine. Loops until end of play.
      */
     public void play() {
+        // TEST //
+        Item item = new Item("an empty beer can");
+        //-TEST-//
+        this.player = new Player(getPlayerName(), item);
         printWelcome();
 
         // Enter the main command loop. Here we repeatedly read commands and
@@ -85,13 +91,22 @@ public class Game {
     }
 
     /**
+     * Print the beginning of the welcome message and allows the player to type his name.
+     * @return String of player's name.
+     */
+    private String getPlayerName() {
+        System.out.println();
+        System.out.println("Welcome to the World of Zuul!");
+        System.out.println("First, tell me, what's your sweet name ?");
+        return parser.getPlayerName();
+    }
+
+    /**
      * Print out the opening message for the player.
      */
     private void printWelcome() {
         System.out.println();
-        System.out.println("Welcome to the World of Zuul!");
-        System.out
-                .println("World of Zuul is a new, incredibly boring adventure game.");
+        System.out.println("As you can see, " + this.player.getName() + ", World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type '" + CommandWord.HELP + "' if you need help.");
         System.out.println();
         System.out.println(currentRoom.getLongDescription());
@@ -122,12 +137,22 @@ public class Game {
             goRoom(command);
             break;
 
+        case DROP:
+            dropItem(command);
+            break;
+        case PICK:
+            pickItem(command);
+            break;
+
         case QUIT:
             wantToQuit = quit(command);
             break;
         }
         return wantToQuit;
     }
+
+
+
 
     // implementations of user commands:
 
@@ -164,6 +189,47 @@ public class Game {
         } else {
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
+        }
+    }
+
+    /**
+     * Method allowing the player to drop an item in the current room.
+     * @param command
+     */
+    private void dropItem(Command command) {
+        if (!command.hasSecondWord()) {
+            // if there is no second word, we don't know where to go...
+            System.out.println("What to drop ?");
+            return;
+        }
+
+        String itemName = command.getSecondWord();
+
+        // Try to drop item in the current rooms.
+        if(player.dropItem(currentRoom, new Item(itemName))){
+            System.out.println("successfully dropped " + itemName);
+        }else{
+            System.out.println("You don't carry : " + itemName);
+            System.out.println("You actually carry :" + player.getInventoryContent());
+        }
+    }
+
+    private void pickItem(Command command) {
+        if (!command.hasSecondWord()) {
+            // if there is no second word, we don't know where to go...
+            System.out.println("What to pick up ?");
+            return;
+        }
+
+        String itemName = command.getSecondWord();
+
+        // Try to drop item in the current rooms.
+        if(currentRoom.hasItem(new Item(itemName))){
+            player.pickUp(currentRoom,new Item(itemName));
+            System.out.println("successfully picked " + itemName);
+        }else{
+            System.out.println("There is no : " + itemName);
+            System.out.println("But there is  :" + currentRoom.getItems());
         }
     }
 
