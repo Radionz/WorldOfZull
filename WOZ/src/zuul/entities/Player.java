@@ -60,9 +60,9 @@ public class Player {
 
     public String getInventoryContent() {
         String res = "";
-        for(Item i : inventory){
-            res += i.toString() + ", ";
+        for(Item item : inventory){
+            res += item.getName() + " - ";
         }
-        return (res.length()>2)? res.substring(0, res.length()-2): res;
+        return (res.length()>3)? res.substring(0, res.length()-3): res;
     }
 }

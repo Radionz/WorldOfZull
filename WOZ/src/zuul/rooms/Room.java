@@ -64,22 +64,31 @@ public class Room {
      * @return A long description of this rooms
      */
     public String getLongDescription() {
-        return "You are " + description + ".\n" + getExitString();
+        return "You are " + description + ".\n" + getItemString() + "\n" + getExitString();
     }
 
-    /**
+    
+    public String getItemString() {
+    	String returnString = "Items: ";
+        for (Item item : items) {
+        	returnString += item.getName() + " - ";
+        }
+        return (returnString.length()>3)? returnString.substring(0, returnString.length()-3): returnString;
+	}
+
+	/**
      * Return a string describing the rooms's exits, for example
      * "Exits: north west".
      *
      * @return Details of the rooms's exits.
      */
-    private String getExitString() {
-        String returnString = "Exits:";
+    public String getExitString() {
+        String returnString = "Exits: ";
         Set<String> keys = exits.keySet();
         for (String exit : keys) {
-            returnString += " " + exit;
+            returnString += exit + " - ";
         }
-        return returnString;
+        return (returnString.length()>3)? returnString.substring(0, returnString.length()-3): returnString;
     }
 
     /**
