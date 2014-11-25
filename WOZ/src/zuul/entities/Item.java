@@ -8,14 +8,16 @@ public class Item {
      * Basic class test, has to be improved !
      */
     private final String name;
+    private int energy;
 
-    public Item(String name){
+    public Item(String name, int energy){
         this.name = name;
     }
 
     public String getName() {
         return name;
     }
+
 
     @Override
     public String toString(){

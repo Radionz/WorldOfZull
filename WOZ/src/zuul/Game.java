@@ -55,7 +55,7 @@ public class Game {
 		outside.setExit("east", theater);
 		outside.setExit("south", lab);
 		outside.setExit("west", pub);
-		outside.addItem(new Item("Chocolate bar"));
+		outside.addItem(new Item("Chocolate bar",1));
 
 		theater.setExit("west", outside);
 
@@ -74,7 +74,7 @@ public class Game {
 	 */
 	public void play() {
 		// TEST //
-		Item item = new Item("an empty beer can");
+		Item item = new Item("an empty beer can", 0);
 		//-TEST-//
 		this.player = new Player(getPlayerName(), item);
 		printWelcome();
@@ -215,7 +215,7 @@ public class Game {
 		String itemName = command.getSecondWord();
 
 		// Try to drop item in the current rooms.
-		if(player.dropItem(currentRoom, new Item(itemName))){
+		if(player.dropItem(currentRoom, new Item(itemName, 0))){
 			System.out.println("successfully dropped " + itemName);
 		}else{
 			System.out.println("You don't carry : " + itemName);
@@ -233,8 +233,8 @@ public class Game {
 		String itemName = command.getSecondWord();
 
 		// Try to pick item in the current rooms.
-		if(currentRoom.hasItem(new Item(itemName))){
-			player.pickUp(currentRoom,new Item(itemName));
+		if(currentRoom.hasItem(new Item(itemName, 0))){
+			player.pickUp(currentRoom,new Item(itemName, 0));
 			System.out.println("successfully picked " + itemName);
 		}else{
 			System.out.println("There is no : " + itemName);

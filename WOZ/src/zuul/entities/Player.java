@@ -11,6 +11,7 @@ public class Player {
 
     private final String name;
     private ArrayList<Item> inventory;
+    private int energy;
 
     public Player(String name, Item item){
         this.name = name;
@@ -64,5 +65,48 @@ public class Player {
             res += item.getName() + " - ";
         }
         return (res.length()>3)? res.substring(0, res.length()-3): res;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    private void setEnergy(int energy) {
+        if(energy > 5){
+            energy=5;
+        }else if(energy < 0){
+            energy =0;
+        }
+        this.energy = energy;
+    }
+
+    /**
+     * Gain a specific amount of energy
+     * @param i amount of energy
+     */
+    public void gainAmountEnergy(int i){
+        setEnergy(getEnergy()+i);
+    }
+
+    /**
+     * Gain one point of energy
+     */
+    public void gainEnergy(){
+        setEnergy(getEnergy()+1);
+    }
+
+    /**
+     * Loose one point of energy
+     */
+    public void looseEnergy(){
+        setEnergy(getEnergy()-1);
+    }
+
+    /**
+     * loose a specifig amount of energy
+     * @param i amount of energy
+     */
+    public void looseAmountEnergy(int i){
+        setEnergy(getEnergy()-i);
     }
 }
