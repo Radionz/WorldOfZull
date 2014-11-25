@@ -7,6 +7,8 @@ import zuul.io.CommandWord;
 import zuul.io.Parser;
 import zuul.rooms.Room;
 
+import java.util.TooManyListenersException;
+
 /**
  * This class is the main class of the "World of Zuul" application.
  * "World of Zuul" is a very simple, text based adventure game. Users can walk
@@ -52,19 +54,13 @@ public class Game {
 		office = new Room("in the computing admin office");
 
 		// initialise rooms exits
-		outside.setExit("east", theater);
-		outside.setExit("south", lab);
-		outside.setExit("west", pub);
+		outside.setExit(Room.Exits.EAST, theater);
+		outside.setExit(Room.Exits.SOUTH, lab);
+		outside.setExit(Room.Exits.WEST, pub);
 		outside.addItem(new Item("Chocolate bar",1));
 
-		theater.setExit("west", outside);
 
-		pub.setExit("east", outside);
-
-		lab.setExit("north", outside);
-		lab.setExit("east", office);
-
-		office.setExit("west", lab);
+		lab.setExit(Room.Exits.EAST, office);
 
 		currentRoom = outside; // start game outside
 	}

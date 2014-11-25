@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 public class Room {
     private String description;
-    private HashMap<String, Room> exits;        // stores exits of this rooms
+    private HashMap<Exits, Room> exits;        // stores exits of this rooms
     private ArrayList<Item> items;
 
     /**
@@ -34,7 +34,7 @@ public class Room {
      */
     public Room(String description) {
         this.description = description;
-        exits = new HashMap<String, Room>();
+        exits = new HashMap<Exits, Room>();
         this.items = new ArrayList<>(100);
     }
 
@@ -44,8 +44,14 @@ public class Room {
      * @param direction The direction of the exit.
      * @param neighbor  The rooms to which the exit leads.
      */
-    public void setExit(String direction, Room neighbor) {
+    public void setExit(Exits direction, Room neighbor) {
         exits.put(direction, neighbor);
+        neighbor.putExit(direction, this);
+    }
+
+
+    public void putExit(Exits exit, Room room){
+        exits.put(exit.getOpposite(), room);
     }
 
     /**
@@ -84,9 +90,9 @@ public class Room {
      */
     public String getExitString() {
         String returnString = "Exits: ";
-        Set<String> keys = exits.keySet();
-        for (String exit : keys) {
-            returnString += exit + " - ";
+        Set<Exits> keys = exits.keySet();
+        for (Exits exit : keys) {
+            returnString += exit.getValue() + " - ";
         }
         return (returnString.length()>3)? returnString.substring(0, returnString.length()-3): returnString;
     }
@@ -99,7 +105,8 @@ public class Room {
      * @return The rooms in the given direction.
      */
     public Room getExit(String direction) {
-        return exits.get(direction);
+        //return exits.get(direction);
+        return exits.get(Exits.getAnExit(direction));
     }
 
     /**
@@ -140,5 +147,32 @@ public class Room {
 
         return (res.length()>2)? res.substring(0, res.length()-2): res;
     }
+
+    public enum Exits{
+        NORTH("north"), EAST("east"), SOUTH("south"), WEST("west");
+
+        private String value;
+        private Exits(String s){
+            this.value = s;
+        }
+        public String getValue(){
+            return this.value;
+        }
+
+        public Exits getOpposite(){
+            return Exits.values()[(this.ordinal()+2)%4];
+        }
+
+        public static Exits getAnExit(String value){
+            for(Exits e : values()){
+                if( e.getValue().equals(value)){
+                    return e;
+                }
+            }
+            return null;
+        }
+
+    }
+
 }
 

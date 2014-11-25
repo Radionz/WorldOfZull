@@ -12,12 +12,25 @@ public class Item {
 
     public Item(String name, int energy){
         this.name = name;
+        this.energy = energy;
+    }
+
+    public Item(String name){
+        this.name = name;
+        this.energy = 0;
     }
 
     public String getName() {
         return name;
     }
 
+    public int getEnergy() {
+        return energy;
+    }
+
+    public void use() {
+        //TODO Dorian method
+    }
 
     @Override
     public String toString(){
@@ -31,4 +44,5 @@ public class Item {
         if (((Item) object).name.equals(this.name)){ return true; }
         return false;
     }
+
 }

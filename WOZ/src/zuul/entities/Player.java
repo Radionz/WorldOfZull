@@ -85,21 +85,21 @@ public class Player {
      * @param i amount of energy
      */
     public void gainAmountEnergy(int i){
-        setEnergy(getEnergy()+i);
+        setEnergy(energy+i);
     }
 
     /**
      * Gain one point of energy
      */
     public void gainEnergy(){
-        setEnergy(getEnergy()+1);
+        setEnergy(energy+1);
     }
 
     /**
      * Loose one point of energy
      */
     public void looseEnergy(){
-        setEnergy(getEnergy()-1);
+        setEnergy(energy-1);
     }
 
     /**
@@ -107,6 +107,14 @@ public class Player {
      * @param i amount of energy
      */
     public void looseAmountEnergy(int i){
-        setEnergy(getEnergy()-i);
+        setEnergy(energy-i);
+    }
+
+    public void use(String item){
+        for(Item i : inventory){
+            if(i.getName().equals(item)){
+                inventory.get(inventory.indexOf(i)).use();
+            }
+        }
     }
 }
