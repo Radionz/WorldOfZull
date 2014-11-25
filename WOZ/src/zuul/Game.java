@@ -4,9 +4,12 @@ import zuul.entities.Item;
 import zuul.entities.Player;
 import zuul.io.Command;
 import zuul.io.CommandWord;
+import zuul.io.IO;
 import zuul.io.Parser;
 import zuul.rooms.Room;
+import zuul.studies.Lesson;
 
+import java.io.IOException;
 import java.util.TooManyListenersException;
 
 /**
@@ -63,6 +66,15 @@ public class Game {
 		lab.setExit(Room.Exits.EAST, office);
 
 		currentRoom = outside; // start game outside
+
+		// TEST LESSON
+		try {
+			IO.addToFileByName(String.valueOf(1),"Welcome in this POO lesson", IO.PossibleFiles.LESSON.getPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Lesson lesson = new Lesson(true,1);
+		System.out.println(lesson.toString());
 	}
 
 	/**
