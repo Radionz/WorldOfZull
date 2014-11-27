@@ -12,11 +12,13 @@ public class Player {
     private final String name;
     private ArrayList<Item> inventory;
     private int energy;
+    private int currentPOOLevel;
 
     public Player(String name, Item item){
         this.name = name;
         this.inventory = new ArrayList<>(100);
         this.inventory.add(item);
+        this.currentPOOLevel = 0;
     }
 
     /* Basic getters / setters */
@@ -27,6 +29,20 @@ public class Player {
     public ArrayList<Item> getInventory() {
         return inventory;
     }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public int getCurrentPOOLevel() {
+        return currentPOOLevel;
+    }
+
+    public void setCurrentPOOLevel(int currentPOOLevel) {
+        this.currentPOOLevel = currentPOOLevel;
+    }
+    /* Basic getters / setters */
+
 
     /**
      * Method allowing the player to pickup an item on the ground
@@ -58,7 +74,10 @@ public class Player {
         }
     }
 
-
+    /**
+     * show player's inventory
+     * @return String of the inventory
+     */
     public String getInventoryContent() {
         String res = "";
         for(Item item : inventory){
@@ -67,10 +86,11 @@ public class Player {
         return (res.length()>3)? res.substring(0, res.length()-3): res;
     }
 
-    public int getEnergy() {
-        return energy;
-    }
 
+    /**
+     * Set an Amount of energy for the player
+     * @param energy new amount of energy
+     */
     private void setEnergy(int energy) {
         if(energy > 5){
             energy=5;
@@ -117,4 +137,6 @@ public class Player {
             }
         }
     }
+
+
 }

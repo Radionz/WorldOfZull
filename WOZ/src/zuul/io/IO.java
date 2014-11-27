@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,7 +20,7 @@ public abstract class IO {
 
 
     public enum PossibleFiles{
-        LESSON("lesson");
+        OTHER_LESSON("lesson_other.json"), POO_LESSON("lesson_poo.json"), POO_QUESTION("question_poo.json");
 
         private String value;
         PossibleFiles(String value){

@@ -8,9 +8,9 @@ import zuul.io.IO;
 import zuul.io.Parser;
 import zuul.rooms.Room;
 import zuul.studies.Lesson;
+import zuul.studies.Question;
 
 import java.io.IOException;
-import java.util.TooManyListenersException;
 
 /**
  * This class is the main class of the "World of Zuul" application.
@@ -35,12 +35,22 @@ public class Game {
 	private Parser parser;
 	private Room currentRoom;
 
-	/**
+	private static Question[] questions;
+	private static Lesson[] lessons;
+
+	/**Lesson[]
 	 * Create the game and initialise its internal map.
 	 */
 	public Game() {
+		questions = new Question[15];
+		lessons = new Lesson[15];
 		createRooms();
+		init();
 		parser = new Parser();
+	}
+
+	public static Question[] getQuestions() {
+		return questions;
 	}
 
 	/**
@@ -62,19 +72,49 @@ public class Game {
 		outside.setExit(Room.Exits.WEST, pub);
 		outside.addItem(new Item("Chocolate bar",1));
 
-
 		lab.setExit(Room.Exits.EAST, office);
 
 		currentRoom = outside; // start game outside
+	}
 
+
+	private void init(){
 		// TEST LESSON
 		try {
-			IO.addToFileByName(String.valueOf(1),"Welcome in this POO lesson", IO.PossibleFiles.LESSON.getPath());
+			for(int k = 0; k < 15 ; k++){
+				IO.addToFileByName(String.valueOf(k), "Question " + k +" ? T", IO.PossibleFiles.POO_QUESTION.getPath());
+			}
+			IO.flushJSON();
+			for(int k = 0; k < 5 ; k++){
+				IO.addToFileByName(String.valueOf(k), "POO_lesson :" + k +" . " +" suite POO_lesson :" + k , IO.PossibleFiles.POO_LESSON.getPath());
+			}
+			IO.flushJSON();
+			for(int k = 0; k < 10 ; k++){
+				IO.addToFileByName(String.valueOf(k), "lesson :" + k +" . " +" suite lesson :" + k*k, IO.PossibleFiles.OTHER_LESSON.getPath());
+			}
+			IO.flushJSON();
+			/*
+			IO.addToFileByName(String.valueOf(1), "Is object class inheritable ? T", IO.PossibleFiles.POO_QUESTION.getPath());
+			IO.addToFileByName(String.valueOf(2), "is a class abstract instanciable ? F", IO.PossibleFiles.POO_QUESTION.getPath());
+			IO.addToFileByName(String.valueOf(3), "Do you like coffee ? T", IO.PossibleFiles.POO_QUESTION.getPath());
+			*/
+			//IO.flushJSON();
+
+			//IO.addToFileByName(String.valueOf(1), "Hello everyone. Today we're gonna learn about class descriptor. Really easy. See ya !", IO.PossibleFiles.POO_LESSON.getPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Lesson lesson = new Lesson(true,1);
-		System.out.println(lesson.toString());
+
+		for(int i = 0; i < 15 ; i++){
+			questions[i] = new Question(i);
+			if(i%3==0){
+				lessons[i/3] = new Lesson(true, i/3);
+			}
+			lessons[4+(2*(i/3))+(i%3)] = new Lesson(false, (2*(i/3))+(i%3)-1);
+		}
+		for(Lesson l : lessons){
+			System.out.println(l.toString()+'\n');
+		}
 	}
 
 	/**
@@ -264,4 +304,5 @@ public class Game {
 			return true; // signal that we want to quit
 		}
 	}
+
 }

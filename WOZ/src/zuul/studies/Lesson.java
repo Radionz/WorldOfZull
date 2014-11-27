@@ -4,6 +4,8 @@ package zuul.studies;
 import zuul.io.IO;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by user on 13/11/14.
@@ -14,13 +16,21 @@ public class Lesson {
     private boolean done;
     private boolean isPOO;
 
-    private String body;
+
+    // List of string : phrase the teacher says in the lesson
+    private ArrayList<String> insts;
+
 
     public Lesson(boolean isPOO, int number){
         this.done = false;
         this.isPOO = isPOO;
         this.number = number;
-        getLessonFromFile();
+        insts = new ArrayList<>(100);
+        if(isPOO){
+            getLessonFromFile(IO.PossibleFiles.POO_LESSON.getPath());
+        }else{
+            getLessonFromFile(IO.PossibleFiles.OTHER_LESSON.getPath());
+        }
     }
 
     // Basic getters/setters //
@@ -39,24 +49,41 @@ public class Lesson {
     public int getNumber() {
         return number;
     }
+
+    public String getSentence(int number){
+        return insts.get(number);
+    }
     // Basic getters/setters //
 
     // SKYPE = dorianblanc
 
-    private void getLessonFromFile(){
+    private void getLessonFromFile(String path){
+        String body = null;
         try {
-            body = IO.getFromFile(number, IO.PossibleFiles.LESSON.getPath());
+            body = IO.getFromFile(number, path);
         } catch (IOException e){
             e.printStackTrace();
         }
         if(body == null){
             body = "ERROR";
         }
+        parseBody(body);
+    }
+
+    private void parseBody(String body){
+        String splits[] = body.split("\\.");
+        Collections.addAll(insts, splits);
     }
 
     @Override
     public String toString(){
-        return this.body+'\n';
+        String res ="";
+        for(String s : insts){
+            res += s + '\n';
+        }
+
+        return res;
     }
+
 
 }
