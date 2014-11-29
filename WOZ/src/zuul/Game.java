@@ -1,12 +1,13 @@
 package zuul;
 
-import zuul.entities.Item;
 import zuul.entities.Player;
+import zuul.entities.items.Coffee;
+import zuul.entities.items.Item;
 import zuul.io.Command;
 import zuul.io.CommandWord;
 import zuul.io.IO;
 import zuul.io.Parser;
-import zuul.rooms.Room;
+import zuul.rooms.*;
 import zuul.studies.Lesson;
 import zuul.studies.Question;
 
@@ -31,7 +32,7 @@ import java.io.IOException;
 
 public class Game {
 
-	private Player player;
+	private static Player player;
 	private Parser parser;
 	private Room currentRoom;
 
@@ -49,6 +50,10 @@ public class Game {
 		parser = new Parser();
 	}
 
+	public static Player getPlayer() {
+		return player;
+	}
+
 	public static Question[] getQuestions() {
 		return questions;
 	}
@@ -61,18 +66,36 @@ public class Game {
 
 		// create the rooms
 		outside = new Room("outside the main entrance of the university");
+		ClassRoom classroom = new ClassRoom("in the classroom", false, 0);
+		ExamRoom examroom = new ExamRoom("in the examroom");
+		LabRoom labroom = new LabRoom("in the labroom");
+		Library library = new Library("in the library");
+		LunchRoom lunchroom = new LunchRoom("in the lunchroom");
+		Corridor corridor = new Corridor("in the corridor");
+		Corridor corridor2 = new Corridor("in the corridor");
 		theater = new Room("in a lecture theater");
 		pub = new Room("in the campus pub");
-		lab = new Room("in a computing lab");
 		office = new Room("in the computing admin office");
 
 		// initialise rooms exits
-		outside.setExit(Room.Exits.EAST, theater);
-		outside.setExit(Room.Exits.SOUTH, lab);
-		outside.setExit(Room.Exits.WEST, pub);
+		outside.setExit(Room.Exits.EAST, library);
+		outside.setExit(Room.Exits.SOUTH, corridor);
+		outside.setExit(Room.Exits.WEST, lunchroom);
 		outside.addItem(new Item("Chocolate bar",1));
+		outside.addUsableItem(new Item("Chocolate bar",1));
+		outside.addItem(new Coffee());
+		
 
-		lab.setExit(Room.Exits.EAST, office);
+		lunchroom.setExit(Room.Exits.WEST, pub);
+		library.setExit(Room.Exits.WEST, theater);
+
+		corridor.setExit(Room.Exits.EAST, labroom);
+		corridor.setExit(Room.Exits.WEST, classroom);
+		corridor.setExit(Room.Exits.SOUTH, corridor2);
+
+		corridor2.setExit(Room.Exits.EAST, office);
+		corridor2.setExit(Room.Exits.WEST, examroom);
+		corridor2.setExit(Room.Exits.SOUTH, outside);
 
 		currentRoom = outside; // start game outside
 	}
@@ -97,7 +120,7 @@ public class Game {
 			IO.addToFileByName(String.valueOf(1), "Is object class inheritable ? T", IO.PossibleFiles.POO_QUESTION.getPath());
 			IO.addToFileByName(String.valueOf(2), "is a class abstract instanciable ? F", IO.PossibleFiles.POO_QUESTION.getPath());
 			IO.addToFileByName(String.valueOf(3), "Do you like coffee ? T", IO.PossibleFiles.POO_QUESTION.getPath());
-			*/
+			 */
 			//IO.flushJSON();
 
 			//IO.addToFileByName(String.valueOf(1), "Hello everyone. Today we're gonna learn about class descriptor. Really easy. See ya !", IO.PossibleFiles.POO_LESSON.getPath());
@@ -192,7 +215,11 @@ public class Game {
 		case PICK:
 			pickItem(command);
 			break;
-			
+
+		case USE:
+			useItem(command);
+			break;
+
 		case INVENTORY:
 			printInventory(command);
 			break;
@@ -200,6 +227,7 @@ public class Game {
 		case QUIT:
 			wantToQuit = quit(command);
 			break;
+
 		}
 		return wantToQuit;
 	}
@@ -263,7 +291,7 @@ public class Game {
 		String itemName = command.getSecondWord();
 
 		// Try to drop item in the current rooms.
-		if(player.dropItem(currentRoom, new Item(itemName, 0))){
+		if(player.dropItem(currentRoom,itemName)){
 			System.out.println("successfully dropped " + itemName);
 		}else{
 			System.out.println("You don't carry : " + itemName);
@@ -281,12 +309,30 @@ public class Game {
 		String itemName = command.getSecondWord();
 
 		// Try to pick item in the current rooms.
-		if(currentRoom.hasItem(new Item(itemName, 0))){
-			player.pickUp(currentRoom,new Item(itemName, 0));
+		if(currentRoom.hasItem(itemName)){
+			player.pickUp(currentRoom,itemName);
 			System.out.println("successfully picked " + itemName);
 		}else{
 			System.out.println("There is no : " + itemName);
 			System.out.println(currentRoom.getItemString());
+		}
+	}
+
+	private void useItem(Command command) {
+		if (!command.hasSecondWord()) {
+			// if there is no second word, we don't know where to go...
+			System.out.println("What to use ?");
+			return;
+		}
+
+		String itemName = command.getSecondWord();
+
+		// Try to use item in the current rooms.
+		if (currentRoom.canUseItem(itemName)) {
+			System.out.println(player.use(itemName));
+		}
+		else {
+			System.out.println("Impossible to use this item here.");
 		}
 	}
 

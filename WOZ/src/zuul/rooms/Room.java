@@ -1,6 +1,6 @@
 package zuul.rooms;
 
-import zuul.entities.Item;
+import zuul.entities.items.Item;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -24,6 +24,7 @@ public class Room {
     private String description;
     private HashMap<Exits, Room> exits;        // stores exits of this rooms
     private ArrayList<Item> items;
+    private ArrayList<Item> usableItems;
 
     /**
      * Create a rooms described "description". Initially, it has
@@ -36,6 +37,7 @@ public class Room {
         this.description = description;
         exits = new HashMap<Exits, Room>();
         this.items = new ArrayList<>(100);
+        this.usableItems = new ArrayList<>(100);
     }
 
     /**
@@ -75,6 +77,8 @@ public class Room {
 
     
     public String getItemString() {
+    	if (items.isEmpty())
+    		return "No items.";
     	String returnString = "Items: ";
         for (Item item : items) {
         	returnString += item.getName() + " - ";
@@ -125,6 +129,10 @@ public class Room {
     public void addItem(Item item) {
         items.add(item);
     }
+    
+    public void addUsableItem(Item item) {
+        usableItems.add(item);
+    }
 
     /**
      * Return a boolean telling if an item is in this room or not.
@@ -133,6 +141,14 @@ public class Room {
      */
     public boolean hasItem(Item item){
         return this.items.contains(item);
+    }
+    
+    public boolean hasItem(String itemString){
+    	for (Item item : items) {
+			if(item.getName().equals(itemString))
+				return true;
+		}
+        return false;
     }
 
     /**
@@ -146,6 +162,14 @@ public class Room {
         }
 
         return (res.length()>2)? res.substring(0, res.length()-2): res;
+    }
+    
+    public boolean canUseItem(String itemString) {
+    	for (Item item : usableItems) {
+			if(item.getName().equals(itemString))
+				return true;
+		}
+        return false;
     }
 
     public enum Exits{

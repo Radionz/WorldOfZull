@@ -1,4 +1,4 @@
-package zuul.entities;
+package zuul.entities.items;
 
 /**
  * Created by user on 13/11/14.
@@ -7,8 +7,8 @@ public class Item {
     /**
      * Basic class test, has to be improved !
      */
-    private final String name;
-    private int energy;
+    protected String name;
+    protected int energy;
 
     public Item(String name, int energy){
         this.name = name;
@@ -17,6 +17,11 @@ public class Item {
 
     public Item(String name){
         this.name = name;
+        this.energy = 0;
+    }
+    
+    public Item(){
+        this.name = "";
         this.energy = 0;
     }
 
@@ -28,9 +33,9 @@ public class Item {
         return energy;
     }
 
-    public void use() {
-        //TODO Dorian method
-    }
+    public String use() {
+		return "this item is useless, it requires may be something to be used.";
+	}
 
     @Override
     public String toString(){

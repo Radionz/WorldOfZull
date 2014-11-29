@@ -1,5 +1,6 @@
 package zuul.entities;
 
+import zuul.entities.items.Item;
 import zuul.rooms.Room;
 
 import java.util.ArrayList;
@@ -26,10 +27,6 @@ public class Player {
         return name;
     }
 
-    public ArrayList<Item> getInventory() {
-        return inventory;
-    }
-
     public int getEnergy() {
         return energy;
     }
@@ -54,9 +51,20 @@ public class Player {
         if(room != null && item != null){
             room.getItemsList().remove(item);
             return this.inventory.add(item);
-        }else{
-            return false;
         }
+        return false;
+    }
+    
+    public boolean pickUp(Room room, String itemString){
+        if(room != null && itemString != null){
+        	for (Item item : room.getItemsList()) {
+				if(item.getName().equals(itemString)){
+					room.getItemsList().remove(item);
+					return this.inventory.add(item);
+				}
+			}  
+        }
+        return false;
     }
 
     /**
@@ -69,9 +77,20 @@ public class Player {
         if(room != null && item != null &&  this.inventory.contains(item)){
             room.addItem(item);
             return this.inventory.remove(item);
-        }else{
-            return false;
         }
+        return false;
+    }
+    
+    public boolean dropItem(Room room, String itemString){
+        if(room != null && itemString != null){
+        	for (Item item : inventory) {
+				if(item.getName().equals(itemString)){
+					 room.addItem(item);
+					 return this.inventory.remove(item);
+				}
+			}
+        }
+        return false;
     }
 
     /**
@@ -130,12 +149,15 @@ public class Player {
         setEnergy(energy-i);
     }
 
-    public void use(String item){
-        for(Item i : inventory){
-            if(i.getName().equals(item)){
-                inventory.get(inventory.indexOf(i)).use();
+    public String use(String itemString){
+        for(Item item : inventory){
+            if(item.getName().equals(itemString)){
+            	String effect = inventory.get(inventory.indexOf(item)).use();
+            	inventory.remove(inventory.indexOf(item));
+                return effect;
             }
         }
+		return "Player don't have this item.";
     }
 
 

@@ -5,7 +5,7 @@ package zuul.rooms;
  */
 public class Corridor extends Room{
 
-    private boolean isLite;
+    private boolean light;
 
     /**
      * Create a rooms described "description". Initially, it has
@@ -16,14 +16,14 @@ public class Corridor extends Room{
      */
     public Corridor(String description) {
         super(description);
-        this.isLite = false;
+        this.light = false;
     }
 
     public boolean isLite() {
-        return isLite;
+        return light;
     }
 
     public void switchLight() {
-        this.isLite = !this.isLite;
+        this.light = !this.light;
     }
 }
