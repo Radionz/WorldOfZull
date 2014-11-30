@@ -1,5 +1,7 @@
 package zuul.rooms;
 
+import java.util.ArrayList;
+
 import zuul.studies.Lesson;
 
 /**
@@ -22,7 +24,17 @@ public class ClassRoom extends Room{
         super(description);
         this.sentenceNb = 0;
         this.lesson = new Lesson(isPOO, playerLevel);
-
+        this.actions = new ArrayList<String>();
+        actions.add("learn");
+        actions.add("nextSentence");
+    }
+    
+    public String learn(){
+    	return displaySentences();
+    }
+    
+    public String nextSentence(){
+    	return displaySentences();
     }
 
     /**

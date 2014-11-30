@@ -2,6 +2,8 @@ package zuul.rooms;
 
 import zuul.entities.items.Item;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ public class Room {
     private HashMap<Exits, Room> exits;        // stores exits of this rooms
     private ArrayList<Item> items;
     private ArrayList<Item> usableItems;
+    protected ArrayList<String> actions;
 
     /**
      * Create a rooms described "description". Initially, it has
@@ -38,6 +41,7 @@ public class Room {
         exits = new HashMap<Exits, Room>();
         this.items = new ArrayList<>(100);
         this.usableItems = new ArrayList<>(100);
+        this.actions = new ArrayList<>(100);
     }
 
     /**
@@ -72,9 +76,18 @@ public class Room {
      * @return A long description of this rooms
      */
     public String getLongDescription() {
-        return "You are " + description + ".\n" + getItemString() + "\n" + getExitString();
+        return "You are " + description + ".\n" + getItemString() + "\n" + getActionString() + "\n" + getExitString();
     }
 
+    public String getActionString() {
+    	if (actions.isEmpty())
+    		return "No actions.";
+    	String returnString = "Actions: ";
+        for (String action : actions) {
+        	returnString += action + " - ";
+        }
+        return (returnString.length()>3)? returnString.substring(0, returnString.length()-3): returnString;
+	}
     
     public String getItemString() {
     	if (items.isEmpty())
@@ -171,6 +184,27 @@ public class Room {
 		}
         return false;
     }
+    
+    public String doSomething(String action){
+    	if(actions.contains(action)){
+		Method method = null;
+		try {
+    		  method = this.getClass().getMethod(action);
+    	} catch (SecurityException e) {
+    	  // ...
+    	} catch (NoSuchMethodException e) {
+    	}
+
+    	try {
+    	  return (String) method.invoke(this);
+    	} catch (IllegalArgumentException e) {
+    	} catch (IllegalAccessException e) {
+    	} catch (InvocationTargetException e) {
+    	}
+    }
+		return "This action doesn't exist in this room.";
+    }
+    
 
     public enum Exits{
         NORTH("north"), EAST("east"), SOUTH("south"), WEST("west");

@@ -1,5 +1,7 @@
 package zuul.rooms;
 
+import java.util.ArrayList;
+
 /**
  * Created by user on 13/11/14.
  */
@@ -17,6 +19,19 @@ public class Corridor extends Room{
     public Corridor(String description) {
         super(description);
         this.light = false;
+        this.actions = new ArrayList<String>();
+        actions.add("switchOn");
+        actions.add("switchOff");
+    }
+    
+    public String switchOn(){
+    	this.light = true;
+    	return "Lights ON !";
+    }
+    
+    public String switchOff(){
+    	this.light = true;
+    	return "Lights OFF !";
     }
 
     public boolean isLite() {

@@ -1,6 +1,8 @@
 package zuul.rooms;
 
 
+import java.util.ArrayList;
+
 import zuul.studies.Lab;
 
 /**
@@ -11,8 +13,13 @@ public class LabRoom extends Room{
     private Lab lab;
 
     public LabRoom(String description){
-        //TODO Ask dorian good implementation
         super(description);
+        this.actions = new ArrayList<String>();
+        actions.add("makeLabExercise");
+    }
+
+    public String makeLabExercise(){
+    	return "WOW amazing lab experience !";
     }
 
 

@@ -207,7 +207,11 @@ public class Game {
 		case GO:
 			goRoom(command);
 			break;
-
+			
+		case DO:
+			doSomething(command);
+			break;
+			
 		case DROP:
 			dropItem(command);
 			break;
@@ -236,7 +240,6 @@ public class Game {
 
 
 	// implementations of user commands:
-
 	private void printInventory(Command command) {
 		System.out.println("You actually carry : " + player.getInventoryContent());
 	}
@@ -336,6 +339,18 @@ public class Game {
 		}
 	}
 
+	private void doSomething(Command command) {
+		if (!command.hasSecondWord()) {
+			// if there is no second word, we don't know where to go...
+			System.out.println("What to do ?");
+			return;
+		}
+
+		String mehtod = command.getSecondWord();
+
+		// Try to use item in the current rooms.
+		System.out.println(currentRoom.doSomething(mehtod));
+	}
 	/**
 	 * "Quit" was entered. Check the rest of the command to see whether we
 	 * really quit the game.

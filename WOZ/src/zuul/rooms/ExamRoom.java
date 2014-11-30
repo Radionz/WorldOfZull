@@ -1,5 +1,7 @@
 package zuul.rooms;
 
+import java.util.ArrayList;
+
 import zuul.studies.Exam;
 
 /**
@@ -19,8 +21,13 @@ public class ExamRoom extends Room{
     public ExamRoom(String description) {
         super(description);
         this.exam = new Exam();
+        this.actions = new ArrayList<String>();
+        actions.add("doExam");
     }
 
+    public String doExam(){
+    	return exam.toString();
+    }
 
     public Exam getExam() {
         return exam;
